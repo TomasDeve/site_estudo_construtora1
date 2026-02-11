@@ -1,13 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const sendMessageToGemini = async (message: string, history: { role: string; parts: { text: string }[] }[]): Promise<string> => {
-  if (!apiKey) {
-    return "Erro: Chave de API não configurada. Por favor, configure a chave API_KEY.";
-  }
-
   try {
     const chat = ai.chats.create({
       model: 'gemini-3-flash-preview',
