@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
-import { sendMessageToGemini } from '../services/geminiService';
+import { MessageSquare, X, Send, Bot } from 'lucide-react';
 import { ChatMessage } from '../types';
 
 export const AIChatbot: React.FC = () => {
@@ -22,6 +21,28 @@ export const AIChatbot: React.FC = () => {
     }
   }, [messages, isOpen]);
 
+  const getMockResponse = (text: string): string => {
+    const lower = text.toLowerCase();
+    
+    if (lower.includes('preço') || lower.includes('custo') || lower.includes('orçamento') || lower.includes('valor')) {
+      return "Como cada obra é única, precisamos entender seu projeto para dar um orçamento preciso. Por favor, preencha o formulário na seção 'Contato' ou nos chame no WhatsApp!";
+    }
+    
+    if (lower.includes('contato') || lower.includes('telefone') || lower.includes('email') || lower.includes('ligar')) {
+      return "Você pode entrar em contato conosco pelo telefone (11) 99999-9999, pelo e-mail contato@construtoraelite.com.br ou visitando nosso escritório na Av. Paulista.";
+    }
+
+    if (lower.includes('projeto') || lower.includes('arquitetura') || lower.includes('planta')) {
+      return "Realizamos projetos arquitetônicos completos, além da execução da obra. Temos uma equipe de engenheiros e arquitetos prontos para transformar sua ideia em realidade.";
+    }
+
+    if (lower.includes('reforma') || lower.includes('residencial') || lower.includes('comercial')) {
+      return "Somos especialistas tanto em construção residencial quanto comercial, além de reformas de alto padrão. Você já possui o terreno ou imóvel?";
+    }
+
+    return "Entendi. Para te atender melhor e com mais agilidade, recomendo clicar no botão de WhatsApp aqui no site ou preencher nosso formulário de contato. Nossa equipe técnica retornará em breve!";
+  };
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -30,21 +51,13 @@ export const AIChatbot: React.FC = () => {
     setInputValue('');
     setIsLoading(true);
 
-    // Prepare history for Gemini
-    const history = messages.map(msg => ({
-      role: msg.role,
-      parts: [{ text: msg.text }]
-    }));
-
-    try {
-      const responseText = await sendMessageToGemini(userMessage.text, history);
+    // Simular delay de rede
+    setTimeout(() => {
+      const responseText = getMockResponse(userMessage.text);
       const botMessage: ChatMessage = { role: 'model', text: responseText, timestamp: new Date() };
       setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
-        console.error("Chat error", error);
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -132,7 +145,7 @@ export const AIChatbot: React.FC = () => {
               </button>
             </div>
             <div className="text-center mt-2">
-                <span className="text-[10px] text-gray-400">Powered by Gemini AI</span>
+                <span className="text-[10px] text-gray-400">Atendimento Automático</span>
             </div>
           </div>
         </div>
